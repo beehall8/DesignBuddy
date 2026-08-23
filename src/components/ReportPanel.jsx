@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react'
-import { BILLING_INCREMENTS } from '../lib/labor.js'
 
 function readFileAsDataUrl(file) {
   return new Promise((resolve, reject) => {
@@ -15,10 +14,6 @@ export default function ReportPanel({ canGenerate, onGenerate, hasMetalPrice }) 
   const [orderRef, setOrderRef] = useState('')
   const [itemSize, setItemSize] = useState('')
   const [gemstoneNotes, setGemstoneNotes] = useState('')
-  const [includeLabor, setIncludeLabor] = useState(false)
-  const [laborMinutes, setLaborMinutes] = useState('')
-  const [laborRate, setLaborRate] = useState('')
-  const [laborIncrementId, setLaborIncrementId] = useState('15min')
   const [logoDataUrl, setLogoDataUrl] = useState(null)
   const [logoName, setLogoName] = useState(null)
   const [generating, setGenerating] = useState(false)
@@ -45,10 +40,6 @@ export default function ReportPanel({ canGenerate, onGenerate, hasMetalPrice }) 
         orderRef: orderRef.trim() || undefined,
         itemSize: itemSize.trim() || undefined,
         gemstoneNotes: gemstoneNotes.trim() || undefined,
-        includeLabor,
-        laborMinutes: parseFloat(laborMinutes),
-        laborRate: parseFloat(laborRate),
-        laborIncrementId,
         logoDataUrl,
       })
     } finally {
@@ -81,47 +72,6 @@ export default function ReportPanel({ canGenerate, onGenerate, hasMetalPrice }) 
           placeholder="1ct round brilliant, center"
         />
       </label>
-
-      <label className="checkbox-row">
-        <input type="checkbox" checked={includeLabor} onChange={(e) => setIncludeLabor(e.target.checked)} />
-        Include modeling / labor cost
-      </label>
-      {includeLabor && (
-        <div className="report-labor-fields">
-          <label className="field-row">
-            Modeling time (minutes)
-            <input
-              type="number"
-              min="0"
-              step="1"
-              value={laborMinutes}
-              onChange={(e) => setLaborMinutes(e.target.value)}
-              placeholder="e.g. 45"
-            />
-          </label>
-          <label className="field-row">
-            Rate ($/hour)
-            <input
-              type="number"
-              min="0"
-              step="1"
-              value={laborRate}
-              onChange={(e) => setLaborRate(e.target.value)}
-              placeholder="e.g. 60"
-            />
-          </label>
-          <label className="field-row">
-            Billing increment
-            <select value={laborIncrementId} onChange={(e) => setLaborIncrementId(e.target.value)}>
-              {BILLING_INCREMENTS.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-      )}
 
       {!hasMetalPrice && (
         <p className="field-hint">
