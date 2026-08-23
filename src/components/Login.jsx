@@ -18,7 +18,7 @@ export default function Login() {
       <div className="auth-card">
         <div className="auth-brand">
           <span className="auth-gem" aria-hidden="true">◆</span>
-          <h1>JewelCalc</h1>
+          <h1>Diamond Design</h1>
         </div>
         <p className="auth-subtitle">Metal weight &amp; cost calculator for jewelry design</p>
 
