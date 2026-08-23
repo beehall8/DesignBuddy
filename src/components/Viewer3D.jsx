@@ -44,6 +44,7 @@ export default function Viewer3D({
   background,
   color,
   viewPreset,
+  onCanvasReady,
 }) {
   const controlsRef = useRef()
 
@@ -53,7 +54,12 @@ export default function Viewer3D({
 
   return (
     <div className="viewer-canvas-wrap" style={{ background: bg }}>
-      <Canvas shadows camera={{ position: [7, 6, 7], fov: 45, near: 0.01, far: 5000 }}>
+      <Canvas
+        shadows
+        camera={{ position: [7, 6, 7], fov: 45, near: 0.01, far: 5000 }}
+        gl={{ preserveDrawingBuffer: true, antialias: true }}
+        onCreated={(state) => onCanvasReady?.(state.gl.domElement)}
+      >
         <color attach="background" args={[bg]} />
         <ambientLight intensity={0.6} />
         <directionalLight
