@@ -107,7 +107,7 @@ export default function App() {
       <header className="app-header">
         <div className="app-brand">
           <span className="auth-gem" aria-hidden="true">◆</span>
-          <span>JewelCalc</span>
+          <span>Diamond Design</span>
         </div>
         <div className="app-header-right">
           <span className="app-session-label">
