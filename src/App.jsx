@@ -30,7 +30,7 @@ export default function App() {
   const [wireframe, setWireframe] = useState(false)
   const [showGrid, setShowGrid] = useState(true)
   const [viewPreset, setViewPreset] = useState(null)
-  const [background, setBackground] = useState('#14161c')
+  const [background, setBackground] = useState('#030407')
 
   const [history, setHistory] = useState(() => loadHistory())
 
