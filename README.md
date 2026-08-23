@@ -14,7 +14,8 @@ get an estimated metal weight and cost based on a material density library.
 - **Weight/cost calculator** — computes enclosed mesh volume (signed
   tetrahedron method), converts mm³ → cm³, multiplies by a material density
   (g/cm³) to get weight, and by an optional $/gram price to get an estimated
-  cost. Includes a unit-scale correction field and a quantity field.
+  cost. Includes a unit-scale correction field, quantity, labor time, hourly
+  rate, billing increments, and a live combined metal-and-labor total.
 - **Materials library** — ~20 default jewelry alloys/metals with standard
   reference densities (editable list — add custom materials, restore
   defaults), persisted in the browser via `localStorage`.
