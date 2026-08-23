@@ -27,5 +27,5 @@ app.get('*', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`JewelCalc remake listening on port ${port}`)
+  console.log(`Diamond Design listening on port ${port}`)
 })
