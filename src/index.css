@@ -1,12 +1,14 @@
 :root {
-  --bg: #0e0f13;
-  --panel: #16181f;
-  --panel-alt: #1c1f28;
-  --border: #2a2d38;
-  --text: #e9eaee;
-  --text-dim: #9599a6;
-  --accent: #c9a24b;
-  --accent-hover: #ddb55c;
+  --bg: #030407;
+  --panel: #07090d;
+  --panel-alt: #0d111a;
+  --border: #1d2433;
+  --border-accent: rgba(100, 138, 255, 0.3);
+  --text: #ffffff;
+  --text-dim: #8f96a8;
+  --accent: #4f7dff;
+  --accent-soft: #6f93ff;
+  --accent-hover: #658dff;
   --danger: #e0625f;
   color-scheme: dark;
 }
@@ -50,7 +52,10 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 30% 20%, #1b1d26 0%, #0e0f13 60%);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(79, 125, 255, 0.16) 0%, transparent 38%),
+    radial-gradient(circle at 75% 80%, rgba(49, 87, 214, 0.1) 0%, transparent 42%),
+    var(--bg);
   padding: 24px;
 }
 
@@ -61,7 +66,7 @@ h3 {
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55), 0 0 45px rgba(79, 125, 255, 0.08);
 }
 
 .auth-brand {
@@ -74,6 +79,7 @@ h3 {
 .auth-gem {
   color: var(--accent);
   font-size: 22px;
+  text-shadow: 0 0 22px rgba(79, 125, 255, 0.65);
 }
 
 .auth-brand h1 {
@@ -105,8 +111,9 @@ h3 {
 }
 
 .auth-tabs button.active {
-  background: var(--panel-alt);
+  background: rgba(79, 125, 255, 0.14);
   color: var(--text);
+  box-shadow: inset 0 0 0 1px rgba(111, 147, 255, 0.16);
 }
 
 .auth-form {
@@ -129,6 +136,14 @@ h3 {
   border-radius: 8px;
   padding: 10px 12px;
   color: var(--text);
+}
+
+.auth-form input:focus,
+.panel-section select:focus,
+.panel-section input:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 125, 255, 0.12);
 }
 
 .auth-divider {
@@ -172,24 +187,37 @@ h3 {
 
 .btn-primary {
   background: var(--accent);
-  color: #16181f;
+  color: #ffffff;
   font-weight: 600;
   border: none;
+  box-shadow: 0 0 28px rgba(79, 125, 255, 0.24);
+  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 
 .btn-primary:hover {
   background: var(--accent-hover);
+  box-shadow: 0 0 34px rgba(79, 125, 255, 0.36);
+  transform: translateY(-1px);
 }
 
 .btn-primary:disabled {
-  background: #3a3d46;
+  background: #252b3a;
   color: var(--text-dim);
   cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
 .btn-secondary {
-  background: transparent;
-  border: 1px solid var(--border);
+  background: rgba(79, 125, 255, 0.08);
+  border: 1px solid var(--border-accent);
+  color: var(--text);
+}
+
+.btn-secondary:hover,
+.btn-ghost:hover {
+  border-color: rgba(111, 147, 255, 0.55);
+  background: rgba(79, 125, 255, 0.13);
   color: var(--text);
 }
 
@@ -229,7 +257,9 @@ h3 {
   justify-content: space-between;
   padding: 0 20px;
   border-bottom: 1px solid var(--border);
-  background: var(--panel);
+  background: rgba(3, 4, 7, 0.88);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.24);
 }
 
 .app-brand {
@@ -237,6 +267,7 @@ h3 {
   align-items: center;
   gap: 8px;
   font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .app-header-right {
@@ -261,7 +292,7 @@ h3 {
 .results-sidebar {
   overflow-y: auto;
   border-right: 1px solid var(--border);
-  background: var(--panel);
+  background: linear-gradient(180deg, #07090d 0%, #05070b 100%);
   padding: 16px;
 }
 
@@ -274,6 +305,7 @@ h3 {
   min-width: 0;
   min-height: 0;
   position: relative;
+  background: var(--bg);
 }
 
 .panel-section {
@@ -350,7 +382,8 @@ h3 {
 .dropzone:hover,
 .dropzone.drag-active {
   border-color: var(--accent);
-  background: var(--panel-alt);
+  background: rgba(79, 125, 255, 0.08);
+  box-shadow: inset 0 0 32px rgba(79, 125, 255, 0.06);
 }
 
 .dropzone-filename {
@@ -447,6 +480,7 @@ h3 {
 .results-cost {
   color: var(--accent);
   font-size: 18px;
+  text-shadow: 0 0 20px rgba(79, 125, 255, 0.3);
 }
 
 .results-disclaimer {
@@ -478,6 +512,17 @@ h3 {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 10px;
+}
+
+.panel-section h2,
+.panel-section h3,
+.results-panel h2 {
+  color: #f7f9ff;
+}
+
+::selection {
+  background: var(--accent);
+  color: #ffffff;
 }
 
 .history-row-top {
