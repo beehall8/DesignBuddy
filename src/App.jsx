@@ -12,6 +12,7 @@ import { computeMeshVolume, scaledVolumeCm3, weightGrams as calcWeightGrams } fr
 import { DEFAULT_MATERIALS, loadMaterials, saveMaterials, restoreDefaultMaterials } from './lib/materials.js'
 import { addHistoryEntry, clearHistory, loadHistory } from './lib/history.js'
 import { generateReportPdf } from './lib/report.js'
+import { BILLING_INCREMENTS, laborCost, roundMinutes } from './lib/labor.js'
 
 export default function App() {
   const { session, signOut } = useAuth()
@@ -28,6 +29,10 @@ export default function App() {
   const [scaleFactor, setScaleFactor] = useState(1)
   const [quantity, setQuantity] = useState(1)
   const [pricePerGram, setPricePerGram] = useState('')
+  const [includeLabor, setIncludeLabor] = useState(false)
+  const [laborMinutes, setLaborMinutes] = useState('')
+  const [laborRate, setLaborRate] = useState('')
+  const [laborIncrementId, setLaborIncrementId] = useState('15min')
 
   const [wireframe, setWireframe] = useState(false)
   const [showGrid, setShowGrid] = useState(true)
@@ -51,6 +56,19 @@ export default function App() {
     () => (volumeCm3 > 0 && selectedMaterial ? calcWeightGrams(volumeCm3, selectedMaterial.density) : 0),
     [volumeCm3, selectedMaterial]
   )
+
+  const parsedLaborMinutes = parseFloat(laborMinutes)
+  const parsedLaborRate = parseFloat(laborRate)
+  const hasLaborEstimate =
+    includeLabor &&
+    Number.isFinite(parsedLaborMinutes) &&
+    parsedLaborMinutes > 0 &&
+    Number.isFinite(parsedLaborRate) &&
+    parsedLaborRate >= 0
+  const billedLaborMinutes = hasLaborEstimate ? roundMinutes(parsedLaborMinutes, laborIncrementId) : null
+  const calculatedLaborCost = hasLaborEstimate
+    ? laborCost(parsedLaborMinutes, parsedLaborRate, laborIncrementId)
+    : null
 
   const handleFile = async (file) => {
     setLoading(true)
@@ -125,6 +143,10 @@ export default function App() {
       pricePerGram: Number.isFinite(price) ? price : null,
       canvasSnapshot,
       ...reportFields,
+      includeLabor: hasLaborEstimate,
+      laborMinutes: parsedLaborMinutes,
+      laborRate: parsedLaborRate,
+      laborIncrementId,
     })
   }
 
@@ -199,6 +221,48 @@ export default function App() {
               />
             </label>
 
+            <label className="checkbox-row">
+              <input type="checkbox" checked={includeLabor} onChange={(e) => setIncludeLabor(e.target.checked)} />
+              Include modeling / labor cost
+            </label>
+
+            {includeLabor && (
+              <div className="labor-fields">
+                <label className="field-row">
+                  Labor time (minutes)
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={laborMinutes}
+                    onChange={(e) => setLaborMinutes(e.target.value)}
+                    placeholder="e.g. 45"
+                  />
+                </label>
+                <label className="field-row">
+                  Hourly rate ($)
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={laborRate}
+                    onChange={(e) => setLaborRate(e.target.value)}
+                    placeholder="e.g. 75.00"
+                  />
+                </label>
+                <label className="field-row">
+                  Billing increment
+                  <select value={laborIncrementId} onChange={(e) => setLaborIncrementId(e.target.value)}>
+                    {BILLING_INCREMENTS.map((increment) => (
+                      <option key={increment.id} value={increment.id}>
+                        {increment.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            )}
+
             <button type="button" className="btn-primary" disabled={!fileName || weight <= 0} onClick={handleSaveToHistory}>
               Save to history
             </button>
@@ -256,6 +320,10 @@ export default function App() {
             weightGrams={weight}
             pricePerGram={parseFloat(pricePerGram)}
             quantity={quantity}
+            laborCost={calculatedLaborCost}
+            laborMinutes={hasLaborEstimate ? parsedLaborMinutes : null}
+            billedLaborMinutes={billedLaborMinutes}
+            laborRate={hasLaborEstimate ? parsedLaborRate : null}
           />
         </aside>
       </div>
