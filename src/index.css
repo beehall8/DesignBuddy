@@ -490,6 +490,17 @@ h3 {
   margin-top: 20px;
 }
 
+/* ---------- PDF report ---------- */
+.report-labor-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(79, 125, 255, 0.06);
+  border: 1px solid var(--border-accent);
+  border-radius: 8px;
+  padding: 10px;
+}
+
 /* ---------- History ---------- */
 .history-empty {
   color: var(--text-dim);
