@@ -49,7 +49,7 @@ export default function Viewer3D({
 
   const empty = !geometry
 
-  const bg = useMemo(() => background || '#14161c', [background])
+  const bg = useMemo(() => background || '#030407', [background])
 
   return (
     <div className="viewer-canvas-wrap" style={{ background: bg }}>
@@ -67,8 +67,8 @@ export default function Viewer3D({
         {showGrid && (
           <Grid
             args={[50, 50]}
-            cellColor="#3a3d46"
-            sectionColor="#565a66"
+            cellColor="#182039"
+            sectionColor="#3157d6"
             fadeDistance={40}
             infiniteGrid
             position={[0, -0.001, 0]}
