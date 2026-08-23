@@ -1,4 +1,4 @@
-# JewelCalc Remake
+# Diamond Design
 
 A rebuild of the core of [jewelcalc.app](https://jewelcalc.app): upload a 3D
 jewelry model (STL or glTF/GLB), preview it in an interactive 3D viewer, and
