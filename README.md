@@ -19,12 +19,15 @@ get an estimated metal weight and cost based on a material density library.
   reference densities (editable list — add custom materials, restore
   defaults), persisted in the browser via `localStorage`.
 - **History** — last 50 calculations saved locally per-browser.
+- **PDF report export** — creates a branded A4 report with an optional client,
+  order reference, item size, gemstone notes, company logo, current 3D-view
+  snapshot, material details, metal cost, labor billing, and estimated total.
 - **Placeholder login** — an email/password screen plus "Continue as guest",
   gating the app. **This is not real authentication** — see below.
 
 **Not included in this pass** (present in the original app, left out per
 scoping): mesh repair, ring size chart, gemstone/band generators, 3D text
-tool, smart resizer, PDF report export, and any real account system/billing.
+tool, smart resizer, and any real account system/billing.
 Ask for any of these to be added next.
 
 ## Running locally
@@ -108,12 +111,15 @@ src/
     MaterialsPanel.jsx  material select + add-custom
     ResultsPanel.jsx    volume/weight/cost display
     HistoryPanel.jsx    saved calculation list
+    ReportPanel.jsx     PDF report fields, logo upload, and export button
   lib/
     auth.jsx            mock auth context (localStorage)
     loadModel.js         STL/glTF parsing → BufferGeometry
     volume.js            mesh volume + unit conversions
     materials.js         default density library + persistence
     history.js            calculation history persistence
+    labor.js              labor-time rounding and cost calculations
+    report.js             branded PDF report generation with jsPDF
   App.jsx
   main.jsx
   index.css
