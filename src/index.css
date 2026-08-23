@@ -490,8 +490,8 @@ h3 {
   margin-top: 20px;
 }
 
-/* ---------- PDF report ---------- */
-.report-labor-fields {
+/* ---------- Labor settings ---------- */
+.labor-fields {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -499,6 +499,19 @@ h3 {
   border: 1px solid var(--border-accent);
   border-radius: 8px;
   padding: 10px;
+}
+
+.results-total-label,
+.results-total {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-accent);
+}
+
+.results-total {
+  color: var(--accent-soft);
+  font-size: 20px;
+  text-shadow: 0 0 24px rgba(79, 125, 255, 0.34);
 }
 
 /* ---------- History ---------- */
