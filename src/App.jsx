@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useAuth } from './lib/auth.jsx'
 import Login from './components/Login.jsx'
 import Viewer3D from './components/Viewer3D.jsx'
@@ -6,10 +6,12 @@ import UploadDropzone from './components/UploadDropzone.jsx'
 import MaterialsPanel from './components/MaterialsPanel.jsx'
 import ResultsPanel from './components/ResultsPanel.jsx'
 import HistoryPanel from './components/HistoryPanel.jsx'
+import ReportPanel from './components/ReportPanel.jsx'
 import { loadModelFile } from './lib/loadModel.js'
 import { computeMeshVolume, scaledVolumeCm3, weightGrams as calcWeightGrams } from './lib/volume.js'
 import { DEFAULT_MATERIALS, loadMaterials, saveMaterials, restoreDefaultMaterials } from './lib/materials.js'
 import { addHistoryEntry, clearHistory, loadHistory } from './lib/history.js'
+import { generateReportPdf } from './lib/report.js'
 
 export default function App() {
   const { session, signOut } = useAuth()
@@ -33,6 +35,7 @@ export default function App() {
   const [background, setBackground] = useState('#030407')
 
   const [history, setHistory] = useState(() => loadHistory())
+  const canvasElRef = useRef(null)
 
   const selectedMaterial = useMemo(
     () => materials.find((m) => m.id === selectedMaterialId) || materials[0],
@@ -99,6 +102,31 @@ export default function App() {
   }
 
   const handleClearHistory = () => setHistory(clearHistory())
+
+  const handleGenerateReport = async (reportFields) => {
+    let canvasSnapshot = null
+    if (canvasElRef.current) {
+      try {
+        canvasSnapshot = canvasElRef.current.toDataURL('image/png')
+      } catch {
+        // The report remains usable when a browser cannot capture the WebGL canvas.
+        canvasSnapshot = null
+      }
+    }
+
+    const price = parseFloat(pricePerGram)
+    generateReportPdf({
+      fileName,
+      materialName: selectedMaterial?.name,
+      density: selectedMaterial?.density,
+      volumeCm3,
+      weightGramsEach: weight,
+      quantity,
+      pricePerGram: Number.isFinite(price) ? price : null,
+      canvasSnapshot,
+      ...reportFields,
+    })
+  }
 
   if (!session) return <Login />
 
@@ -199,6 +227,12 @@ export default function App() {
             </div>
           </div>
 
+          <ReportPanel
+            canGenerate={Boolean(fileName) && weight > 0}
+            hasMetalPrice={Number.isFinite(parseFloat(pricePerGram)) && parseFloat(pricePerGram) > 0}
+            onGenerate={handleGenerateReport}
+          />
+
           <HistoryPanel history={history} onClear={handleClearHistory} />
         </aside>
 
@@ -210,6 +244,9 @@ export default function App() {
             background={background}
             color={selectedMaterial ? materialColor(selectedMaterial.id) : '#c9c9c9'}
             viewPreset={viewPresetName(viewPreset)}
+            onCanvasReady={(element) => {
+              canvasElRef.current = element
+            }}
           />
         </main>
 
