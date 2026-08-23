@@ -5,10 +5,26 @@ function fmt(n, digits = 3) {
   return n.toLocaleString(undefined, { maximumFractionDigits: digits })
 }
 
-export default function ResultsPanel({ volumeCm3, weightGrams, pricePerGram, quantity }) {
+function money(n) {
+  if (!Number.isFinite(n)) return '—'
+  return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
+export default function ResultsPanel({
+  volumeCm3,
+  weightGrams,
+  pricePerGram,
+  quantity,
+  laborCost,
+  laborMinutes,
+  billedLaborMinutes,
+  laborRate,
+}) {
   const hasResult = Number.isFinite(volumeCm3) && volumeCm3 > 0
   const totalWeight = hasResult ? weightGrams * quantity : 0
   const cost = hasResult && Number.isFinite(pricePerGram) ? totalWeight * pricePerGram : null
+  const hasLaborCost = Number.isFinite(laborCost)
+  const estimatedTotal = cost !== null || hasLaborCost ? (cost || 0) + (hasLaborCost ? laborCost : 0) : null
 
   return (
     <div className="results-panel">
@@ -39,7 +55,30 @@ export default function ResultsPanel({ volumeCm3, weightGrams, pricePerGram, qua
           {cost !== null && (
             <>
               <dt>Estimated metal cost</dt>
-              <dd className="results-cost">${fmt(cost, 2)}</dd>
+              <dd className="results-cost">${money(cost)}</dd>
+            </>
+          )}
+
+          {hasLaborCost && (
+            <>
+              <dt>Labor time</dt>
+              <dd>
+                {fmt(laborMinutes, 0)} min
+                <span className="results-sub">{fmt(billedLaborMinutes, 0)} min billed</span>
+              </dd>
+
+              <dt>Hourly rate</dt>
+              <dd>${money(laborRate)} / hr</dd>
+
+              <dt>Estimated labor cost</dt>
+              <dd className="results-cost">${money(laborCost)}</dd>
+            </>
+          )}
+
+          {estimatedTotal !== null && (
+            <>
+              <dt className="results-total-label">Estimated total</dt>
+              <dd className="results-total">${money(estimatedTotal)}</dd>
             </>
           )}
         </dl>
